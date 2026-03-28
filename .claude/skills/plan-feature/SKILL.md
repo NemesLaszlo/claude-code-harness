@@ -72,4 +72,4 @@ Produce a consolidated **Validated Feature Plan** with:
 5. Recommended agent assignments
 6. Open questions needing human decision
 
-Refer to the [Feature Planner agent](.claude/agents/engineering/feature-planner.md) for detailed output formats.
+Refer to the Feature Planner agent for detailed output formats.

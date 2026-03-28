@@ -307,16 +307,3 @@ If the feature changes or new information surfaces:
 3. **Update the plan** — Show what changed and why
 4. **Re-confirm agent assignments** — Ensure they still make sense
 
----
-
-## RELATED AGENTS
-
-- **DeepDive** — For deep investigation when Phase 1 reveals unknowns in the codebase
-- **Clean Code Architect** — Primary implementation agent for validated plans
-- **DeepCode** — For implementing fixes and features from validated plans
-- **Backend Architect** — For architectural decisions surfaced during planning
-- **Frontend Developer** — For frontend implementation of validated plans
-- **Security Vulnerability Scanner** — When Phase 2 flags HIGH security risk
-- **DevOps Automator** — When Phase 3 includes infrastructure or deployment changes
-- **UI Designer** — When the feature requires new UI components or flows
-- **UX Researcher** — When Phase 2 reveals unclear user requirements

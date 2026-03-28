@@ -31,7 +31,7 @@ Based on the project type, recommend which agents to include. Use these guidelin
 | **Enterprise** | Feature Planner, DeepDive, DeepCode, Backend Architect, Security Scanner, DevOps Automator |
 | **AI/ML Project** | Feature Planner, AI Engineer, Backend Architect, Clean Code Architect |
 
-Always include: **Feature Planner**, **DeepDive + DeepCode** (for bug investigation)
+**Feature Planner** is included in every set. Consider adding **DeepDive + DeepCode** to any project where bug investigation is needed.
 
 Present the recommendation and ask the user to confirm or adjust before copying.
 
@@ -42,7 +42,7 @@ After confirmation:
 1. Create `.claude/agents/` directory structure
 2. Copy selected agent files from the Agent Collection
 3. Copy relevant skills to `.claude/skills/`
-4. Always copy: `plan-feature`, `investigate`, `review`, `security-scan`, `explore`
+4. Always copy: `plan-feature`, `implement`, `cross-review`, `fix-issues`, `investigate`, `review`, `security-scan`, `explore`
 
 ### Step 4: Generate CLAUDE.md Section
 
@@ -63,5 +63,5 @@ Ask the user if they want to customize any agents for the project:
 
 Tell the user:
 1. What was copied and where
-2. How to use the key workflows (`/plan-feature`, `/investigate`, `/review`)
+2. How to use the key workflows (`/plan-feature` → `/implement` → `/fix-issues`, `/investigate`, `/review`)
 3. Any agents they might want to customize further

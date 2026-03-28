@@ -2,9 +2,12 @@
 
 This project uses the following agents:
 
-## Active Agents
+## Configuration
 
-All agents use **model: opus** for maximum capability.
+- Always use **Context7 MCP** when you need library/API documentation, code generation, setup or configuration steps — without the user having to explicitly ask. If Context7 is available and the task involves any library, framework, SDK, API, CLI tool, or cloud service, query Context7 first for current documentation.
+- All agents use **model: opus** for maximum capability. Use **sonnet** as a secondary model for cross-validation when noted in workflows.
+
+## Active Agents
 
 ### Engineering Core
 - [Feature Planner](.claude/agents/engineering/feature-planner.md) — Three-phase validation before implementation (specs, tasks, plan)
@@ -25,7 +28,7 @@ All agents use **model: opus** for maximum capability.
 - [UI Designer](.claude/agents/design/ui-designer.md) — Visual design, component libraries, design systems
 - [UX Researcher](.claude/agents/design/ux-researcher.md) — User research, usability testing, insights
 
-### Agent Collaboration Patterns
+## Agent Collaboration Patterns
 
 | Workflow | Agents | Description |
 |----------|--------|-------------|
@@ -35,11 +38,41 @@ All agents use **model: opus** for maximum capability.
 | **Research → Design → Build** | UX Researcher → UI Designer → Frontend Developer | Full design workflow |
 | **Architecture → Implementation** | Backend Architect → Clean Code Architect | Design then quality implementation |
 | **Prototype → Production** | Rapid Prototyper → Frontend Developer / Backend Architect | Validate then scale |
-| **Feature Planning → Implementation** | Feature Planner → Clean Code Architect / Frontend Developer / Backend Architect | Validate specs, tasks, plan → then implement |
+| **Feature Planning → Implementation** | Feature Planner → Backend Architect + Frontend Developer | Validate specs, tasks, plan → then implement with domain agents |
 | **Feature Planning → Investigation → Fix** | Feature Planner → DeepDive → DeepCode | Plan reveals unknowns, investigate, then implement |
 | **Exploratory → Plan → Implementation** | DeepDive → Feature Planner → Implementation agents | Investigate unfamiliar code first, then plan with full context |
+| **Full-Stack Feature** | Feature Planner → Backend Architect → Frontend Developer → `/review` → `/security-scan` | End-to-end validated feature delivery |
+| **Cross-Model Validation** | Any agent (opus) → re-run validation (sonnet) | Run primary work with opus, cross-check with sonnet for blind spots |
 
-### Recommended Feature Workflow
+## Multi-Agent & Multi-Model Patterns
+
+### Combining Agents in Flows
+Agents and skills can be chained sequentially for comprehensive workflows:
+
+```
+/plan-feature [description]          # Feature Planner validates
+  → /implement                       # Backend Architect + Frontend Developer build it
+                                     # Auto-runs cross-model review (opus + sonnet)
+  → /fix-issues                      # Fixes all issues from the review
+```
+
+### The Plan → Implement → Fix Cycle
+The recommended full-stack workflow:
+
+1. `/plan-feature` — validates specs, tasks, and implementation plan
+2. `/implement` — executes the plan with Backend Architect + Frontend Developer, then **automatically** runs cross-model review (opus + sonnet) without asking
+3. `/fix-issues` — takes the combined review summary and fixes all must-fix and should-fix items
+
+### Cross-Model Review (built into `/implement`)
+After implementation completes, `/implement` automatically:
+- Spawns an **opus** review agent and a **sonnet** review agent in parallel
+- Both independently review all changes for quality, security, and correctness
+- Results are merged, deduplicated, and issues found by both models are flagged as high-confidence
+- Produces a combined summary ready for `/fix-issues`
+
+The primary model is always **opus**. Sonnet serves as a cross-reference, not a replacement.
+
+## Recommended Feature Workflow
 
 Choose the right planning approach based on feature size:
 
@@ -54,26 +87,31 @@ For medium-to-large features:
 ```
 1. Feature Idea
    ↓
-2. Feature Planner (3 validation phases)
+2. /plan-feature [description]
    Phase 1: Domain & Spec Validation
-   Phase 2: Task Validation (edge cases, security, data, rollback)
+   Phase 2: Task Validation
    Phase 3: Implementation Plan Validation
    ↓
-3. Validated plan with refined tasks
+3. /implement
+   → Backend Architect + Frontend Developer execute tasks
+   → Cross-model review runs automatically (opus + sonnet)
+   → Combined review summary produced
    ↓
-4. /task for each validated task
+4. /fix-issues
+   → Fixes all must-fix and should-fix items
    ↓
-5. Implementation (using assigned subagents)
+5. /security-scan before deploying
 ```
 
-**Triggering the Feature Planner:** Use `/plan-feature [description]` or ask Claude to "use the Feature Planner agent". The agent will run all three validation phases and produce an implementation-ready plan before any code is written.
-
-### Available Skills
+## Available Skills
 
 | Skill | Trigger | Purpose |
 |---|---|---|
 | `/plan-feature` | `/plan-feature [description]` | Run 3-phase Feature Planner validation |
+| `/implement` | `/implement [plan or description]` | Execute plan task-by-task with Backend Architect + Frontend Developer, auto-runs `/cross-review` at the end |
+| `/cross-review` | `/cross-review [target or blank]` | Dual-model review (opus + sonnet in parallel), merges and deduplicates findings |
+| `/fix-issues` | `/fix-issues [specific issues or blank]` | Fix all must-fix and should-fix items from cross-validation summary |
 | `/investigate` | `/investigate [problem]` | Deep root cause analysis (DeepDive workflow) |
-| `/review` | `/review [file or blank]` | Code review against Clean Code principles |
+| `/review` | `/review [file or blank]` | Code review against Clean Code principles (single model) |
 | `/security-scan` | `/security-scan [target or blank]` | Security vulnerability scan |
 | `/explore` | `/explore [question]` | Quick codebase exploration and understanding |
