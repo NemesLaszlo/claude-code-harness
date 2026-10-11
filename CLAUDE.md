@@ -1,4 +1,4 @@
-# Agent Collection
+# Claude Code Harness
 
 @AGENTS.md
 

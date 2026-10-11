@@ -1,17 +1,17 @@
 ---
 name: setup-agents
-description: "Set up the Agent Collection in a new project. Copies relevant agents and skills, the AGENTS.md workflow, settings and gitignore entries, prunes unnecessary ones, and generates the CLAUDE.md agent section. Use when the user says setup agents, add agents to this project, initialize agents, or is starting a new project."
-argument-hint: "[project-type] [path-to-agent-collection]"
+description: "Set up the Claude Code Harness in a new project. Copies relevant agents and skills, the AGENTS.md workflow, settings and gitignore entries, prunes unnecessary ones, and generates the CLAUDE.md agent section. Use when the user says setup agents, add agents to this project, initialize agents, or is starting a new project."
+argument-hint: "[project-type] [path-to-harness]"
 disable-model-invocation: true
 ---
 
 ## Your Task
 
-Set up the Agent Collection for this project. The user wants to configure agents, skills and the workflow from their collection.
+Set up the Claude Code Harness for this project. The user wants to configure agents, skills and the workflow from the harness repo.
 
 **Project type hint / collection path:** $ARGUMENTS
 
-If the collection path is not given, look for `Agent-Collection` next to this project or under `~/Projects`, and ask if it cannot be found.
+If the harness path is not given, look for `claude-code-harness` (or the older folder name `Agent-Collection`) next to this project or under `~/Projects`, and ask if it cannot be found.
 
 ### Step 1: Analyze the Project
 

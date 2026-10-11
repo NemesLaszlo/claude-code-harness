@@ -1,4 +1,4 @@
-# Agent Collection
+# Claude Code Harness
 
 A curated harness for Claude Code: **13 specialized agents**, **16 skills**, and a six-beat **AGENTS.md workflow** that takes a task from an isolated worktree to an evidence-backed pull request. Copy the `.claude/` folder and `AGENTS.md` into any project and start working immediately.
 
@@ -6,11 +6,11 @@ A curated harness for Claude Code: **13 specialized agents**, **16 skills**, and
 
 ```bash
 # Copy the harness into your project
-cp -r Agent-Collection/.claude/ your-project/.claude/
-cp Agent-Collection/AGENTS.md your-project/AGENTS.md
+cp -r claude-code-harness/.claude/ your-project/.claude/
+cp claude-code-harness/AGENTS.md your-project/AGENTS.md
 
 # Optionally install the user-level setup skill (available across all projects)
-cp -r Agent-Collection/user-skills/* ~/.claude/skills/
+cp -r claude-code-harness/user-skills/* ~/.claude/skills/
 ```
 
 Then add `@AGENTS.md` to your project's `CLAUDE.md` and fill in the repo-specific sections at the bottom of `AGENTS.md` (checks, invariants, environment). See this repo's [`CLAUDE.md`](CLAUDE.md) for a complete example. Or run `/setup-agents` inside the project and let it do the copying and pruning.
