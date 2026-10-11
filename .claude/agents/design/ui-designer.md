@@ -1,8 +1,9 @@
 ---
 name: ui-designer
 description: Use this agent for visual design, component libraries, and design systems. This includes color palettes, typography, interaction design, design tokens, component specifications, and developer handoff.
-version: 1.0
-model: opus
+version: 1.1
+model: fable
+color: pink
 ---
 
 # 🎨 UI Designer Agent

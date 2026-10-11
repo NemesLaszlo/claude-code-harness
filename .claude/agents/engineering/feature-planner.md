@@ -11,8 +11,9 @@ description: >
   - Output a validated, implementation-ready plan with all gaps and risks surfaced.
 
   This agent does NOT write code. It produces a rock-solid plan that implementation agents (Clean Code Architect, DeepCode, Frontend Developer, etc.) can execute with confidence.
-model: opus
+model: fable
 color: blue
+disallowedTools: Edit, Write, NotebookEdit
 ---
 
 # AGENT FEATURE PLANNER
@@ -195,13 +196,14 @@ Once tasks are validated, build and validate the implementation plan.
 
 - **Spec-plan alignment**: Does the plan fully address all requirements and acceptance criteria from Phase 2?
 - **Technical approach**: Is this the simplest approach that meets requirements? Over-engineered? Under-engineered?
-- **Pattern consistency**: Does the plan follow existing codebase patterns? Flag and justify any deviations
+- **Pattern consistency**: Does the plan follow existing codebase patterns? Flag and justify any deviations. Actions orchestrate domain rules, a service layer owns reusable mechanics (`/code-structure`)
 - **File coverage**: Are all files that need changes identified? Missing files?
 - **Implementation order**: Are steps in the right order? Are there hidden dependencies between steps?
 - **Testing strategy**: Sufficient coverage? Unit tests for logic, integration tests for boundaries, e2e for critical paths?
 - **Migration strategy**: Database migrations needed? Feature flags for rollout? Backwards compatibility maintained?
 - **Risk areas**: Complex integrations, migration risks, performance concerns, third-party API limits?
 - **Verification plan**: How do we prove it works? Manual test steps + automated test expectations
+- **Evidence plan**: What before/after proof each task will produce (`/evidence-driven-testing`): recording or screenshots for UI, measured numbers or output pairs for everything else
 
 ### Output Format
 

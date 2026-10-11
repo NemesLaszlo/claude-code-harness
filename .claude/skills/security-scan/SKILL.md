@@ -1,16 +1,21 @@
 ---
 name: security-scan
 description: "Security vulnerability scan using the Security Vulnerability Scanner agent workflow. Use when the user says security scan, check for vulnerabilities, security audit, is this secure, OWASP check, or before deploying to production."
+argument-hint: "[file, directory, or blank for recent changes]"
+context: fork
+agent: security-vulnerability-scanner
+background: false
+allowed-tools: Bash(git branch *), Bash(git diff *)
 ---
 
 ## Context
 
-- Current branch: !`git branch --show-current`
-- Recently modified files: !`git diff --name-only HEAD~5`
+- Current branch: !`git branch --show-current || true`
+- Recently modified files: !`git diff --name-only HEAD~5 || true`
 
 ## Your Task
 
-Run a security vulnerability scan on the following:
+You are the **Security Vulnerability Scanner** agent. Run a security vulnerability scan on the following:
 
 **Target:** $ARGUMENTS
 
@@ -35,6 +40,7 @@ Systematically analyze for:
 13. **Path Traversal** — File system access control
 14. **Deserialization** — Unsafe object deserialization
 15. **SSRF** — Server-side request forgery
+16. **Agent and tool surfaces** — Prompt injection through tool results, over-broad MCP or hook permissions, secrets in CLAUDE.md or settings files
 
 ### Output Format
 
@@ -60,6 +66,7 @@ Systematically analyze for:
 
 **Summary:** X critical, X high, X medium, X low issues found.
 **Recommendation:** [BLOCK DEPLOY | FIX BEFORE DEPLOY | ACCEPTABLE RISK | CLEAN]
+**Next step:** `/fix-issues` for anything above Low.
 ```
 
-Only report actual vulnerabilities, not theoretical concerns. Be specific about location and exploitability. Omit empty severity categories.
+Only report actual vulnerabilities, not theoretical concerns. Be specific about location and exploitability. Omit empty severity categories. Do not edit files.

@@ -1,18 +1,20 @@
 ---
 name: cross-review
-description: "Run a cross-model code review using both opus and sonnet in parallel, then merge and deduplicate findings into a combined summary. Use when the user says cross review, dual review, cross-model review, review with both models, or wants a thorough second-opinion review of changes."
+description: "Run a cross-model code review using both fable and opus in parallel, then merge and deduplicate findings into a combined summary. Use when the user says cross review, dual review, cross-model review, review with both models, or wants a thorough second-opinion review of changes."
+argument-hint: "[file, directory, or blank for current changes]"
+allowed-tools: Bash(git branch *), Bash(git diff *), Bash(git log *), Bash(git status *)
 ---
 
 ## Context
 
-- Current branch: !`git branch --show-current`
-- Staged changes: !`git diff --cached --stat`
-- Unstaged changes: !`git diff --stat`
-- Recent commits: !`git log --oneline -5`
+- Current branch: !`git branch --show-current || true`
+- Staged changes: !`git diff --cached --stat || true`
+- Unstaged changes: !`git diff --stat || true`
+- Recent commits: !`git log --oneline -5 || true`
 
 ## Your Task
 
-Run a **cross-model code review** using both opus and sonnet to catch blind spots.
+Run a **cross-model code review** using both fable and opus to catch blind spots.
 
 **Target:** $ARGUMENTS
 
@@ -31,19 +33,20 @@ Collect the full list of files and changes to review.
 
 ### Step 2: Launch Parallel Reviews
 
-Use the Agent tool to launch TWO review agents **in parallel** (both in the same message):
+Use the Agent tool to launch TWO review agents **in parallel** (both in the same message). Both run in the background so the diff never lands in the main context twice.
 
-**Agent A (opus):** Launch a general-purpose agent with `model: opus`. Provide it the list of files/changes and instruct it to review for:
+**Agent A (fable):** Launch a general-purpose agent with `model: fable`. Provide it the list of files/changes and instruct it to review for:
 - Clean code principles (naming, function size, duplication, abstraction)
+- Actions vs service-layer separation (`/code-structure`): domain rules leaking into services, mechanics duplicated across actions
 - Error handling and edge cases
 - Security vulnerabilities (injection, auth, data exposure)
 - Pattern consistency with the existing codebase
 - Performance concerns
-- Test coverage gaps
+- Test coverage gaps and missing evidence for behavior claims
 
 It must produce a structured list of issues with severity, file path, line number, and description.
 
-**Agent B (sonnet):** Launch a general-purpose agent with `model: sonnet`. Same files, same review criteria, independent review. This provides a second perspective.
+**Agent B (opus):** Launch a general-purpose agent with `model: opus`. Same files, same review criteria, independent review. This provides a second perspective.
 
 ### Step 3: Merge Results
 
@@ -60,16 +63,16 @@ After both agents complete:
 ## Cross-Review Summary
 
 **Scope:** [what was reviewed]
-**Models:** opus + sonnet
+**Models:** fable + opus
 
 ### Must Fix (found by both models)
 - [Issue] — `file:line` — [description]
 
 ### Should Fix (found by one model)
-- [Issue] — `file:line` — [found by: opus|sonnet] — [description]
+- [Issue] — `file:line` — [found by: fable|opus] — [description]
 
 ### Consider
-- [Suggestion] — `file:line` — [found by: opus|sonnet] — [description]
+- [Suggestion] — `file:line` — [found by: fable|opus] — [description]
 
 ### What Looks Good
 - [Positive observations agreed on by both models]
@@ -77,8 +80,8 @@ After both agents complete:
 ### Stats
 - Total issues: X (Y must fix, Z should fix, W consider)
 - Consensus issues (both models): X
+- Fable-only issues: X
 - Opus-only issues: X
-- Sonnet-only issues: X
 
 ### Next Step
 Run `/fix-issues` to address all must-fix and should-fix items.

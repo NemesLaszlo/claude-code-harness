@@ -26,3 +26,14 @@ Desktop.ini
 *.tmp
 *.temp
 nul
+
+# Claude Code native worktrees (claude -w / isolation: worktree)
+.claude/worktrees/
+
+# Evidence captured by /evidence-driven-testing (uploaded, never committed)
+.artifacts/
+
+# Python (bundled evidence recorder + its tests)
+__pycache__/
+*.py[cod]
+.pytest_cache/

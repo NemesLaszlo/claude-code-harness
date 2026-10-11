@@ -1,21 +1,26 @@
 ---
 name: review
 description: "Code review using Clean Code Architect principles. Reviews staged changes, recent commits, or specific files for quality, security, and maintainability. Use when the user says review, review my code, check this, code review, or before committing significant changes."
+argument-hint: "[file, directory, or blank for current changes]"
+context: fork
+agent: clean-code-architect
+background: false
+allowed-tools: Bash(git branch *), Bash(git diff *), Bash(git log *)
 ---
 
 ## Context
 
-- Current branch: !`git branch --show-current`
-- Staged changes: !`git diff --cached --stat`
-- Unstaged changes: !`git diff --stat`
+- Current branch: !`git branch --show-current || true`
+- Staged changes: !`git diff --cached --stat || true`
+- Unstaged changes: !`git diff --stat || true`
 
 ## Your Task
 
-Review the following for code quality, security, and maintainability:
+Review the following for code quality, security, and maintainability. This is a review, not an implementation task: do not edit files.
 
 **Target:** $ARGUMENTS
 
-If no target is specified, review all staged and unstaged changes.
+If no target is specified, review all staged and unstaged changes. If there are none, review the last commit (`git diff HEAD~1`).
 
 ### Review Checklist
 
@@ -25,6 +30,7 @@ If no target is specified, review all staged and unstaged changes.
 - [ ] No code duplication
 - [ ] Appropriate level of abstraction
 - [ ] Code follows existing project patterns and conventions
+- [ ] Domain rules live in actions, reusable mechanics in the service layer (`/code-structure`); no god or leaky services
 
 **Quality**
 - [ ] Error handling is comprehensive and graceful
@@ -44,6 +50,7 @@ If no target is specified, review all staged and unstaged changes.
 - [ ] Code is testable with clear boundaries
 - [ ] Changes are backwards compatible (or breaking changes documented)
 - [ ] Cognitive complexity is low (minimal nesting, clear flow)
+- [ ] Prose the change touched (comments, docs, commit message) passes the `/unslop` checklist
 
 ### Output Format
 

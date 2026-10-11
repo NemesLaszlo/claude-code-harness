@@ -1,13 +1,15 @@
 ---
 name: fix-issues
-description: "Fix all issues from a cross-validation review summary. Use when the user says fix issues, fix these, fix the review findings, address the issues, or after /implement produces a cross-validation summary."
+description: "Fix all issues from a cross-validation review summary, a /review verdict, or a Greptile review. Use when the user says fix issues, fix these, fix the review findings, address the issues, or after /implement produces a cross-validation summary."
+argument-hint: "[specific issues, or blank for the latest review]"
+allowed-tools: Bash(git branch *), Bash(git diff *), Bash(git status *)
 ---
 
 ## Context
 
-- Current branch: !`git branch --show-current`
-- Modified files: !`git status --short`
-- Staged changes: !`git diff --cached --stat`
+- Current branch: !`git branch --show-current || true`
+- Modified files: !`git status --short || true`
+- Staged changes: !`git diff --cached --stat || true`
 
 ## Your Task
 
@@ -15,7 +17,7 @@ Fix all issues identified in the most recent cross-validation summary or code re
 
 **Specific issues to fix:** $ARGUMENTS
 
-If no arguments provided, find the most recent cross-validation summary or `/review` output in this conversation and address all **Must Fix** and **Should Fix** items.
+If no arguments provided, find the most recent cross-validation summary, `/review` output, or `/security-scan` result in this conversation and address all **Must Fix** and **Should Fix** items.
 
 ---
 
@@ -50,12 +52,14 @@ For each issue:
 - Don't refactor surrounding code unless it's part of the fix
 - Follow existing patterns in the file
 - If a fix requires changes in multiple files, make all related changes together
+- If a fix extracts logic shared by two or more callers, follow `/code-structure`: one extraction, one caller replaced, verified, then the rest
 
 **Step 3: Verify**
 
 After all fixes are applied:
 1. Run tests if they exist
 2. Do a quick scan of all modified files to ensure no regressions
+3. Re-capture evidence for any behavior the fixes changed (`/evidence-driven-testing`)
 
 **Step 4: Report**
 
@@ -76,4 +80,8 @@ After all fixes are applied:
 ### Verification
 - Tests: [passed/failed/no tests]
 - Regression check: [clean/issues found]
+- Evidence: [path under .artifacts/ or "unchanged"]
+
+### Next Step
+`/evidence-driven-testing` if behavior changed, then `/ship`.
 ```

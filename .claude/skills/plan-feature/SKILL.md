@@ -1,17 +1,22 @@
 ---
 name: plan-feature
 description: "Run the three-phase Feature Planner validation before implementing a feature. Use when the user says plan feature, plan a new feature, I want to add, or any request for structured feature planning with edge case and risk analysis."
+argument-hint: "[feature description]"
+context: fork
+agent: feature-planner
+background: false
+allowed-tools: Bash(git branch *), Bash(git log *), Bash(git ls-tree *)
 ---
 
 ## Context
 
-- Current branch: !`git branch --show-current`
-- Recent changes: !`git log --oneline -5`
-- Project structure: !`ls -la`
+- Current branch: !`git branch --show-current || true`
+- Recent changes: !`git log --oneline -5 || true`
+- Top-level layout: !`git ls-tree --name-only HEAD || true`
 
 ## Your Task
 
-You are invoking the **Feature Planner** agent workflow. Run all three validation phases for the following feature:
+You are the **Feature Planner** agent. Run all three validation phases for the following feature and return the consolidated plan to the caller:
 
 **Feature:** $ARGUMENTS
 
@@ -21,7 +26,7 @@ Before planning, validate the project's documentation and specs:
 
 - **Completeness**: All key features specced? Features in README but missing from specs?
 - **Gaps**: Missing specs, undocumented decisions, features without tasks
-- **Consistency**: Do specs, README, and tasks tell the same story? Contradictions?
+- **Consistency**: Do specs, README, AGENTS.md and tasks tell the same story? Contradictions?
 - **Staleness**: Specs outdated relative to completed work? CHANGELOG accurate?
 - **Coverage**: Tasks cover all specced features? Orphaned tasks?
 - **Clarity**: Requirements precise enough to implement? Vague language?
@@ -54,10 +59,11 @@ Build and validate the implementation plan:
 
 - **Spec-plan alignment**: Addresses all requirements and acceptance criteria?
 - **Technical approach**: Simplest that meets requirements?
-- **Pattern consistency**: Follows existing codebase patterns?
+- **Pattern consistency**: Follows existing codebase patterns? Actions orchestrate, a service layer owns reusable mechanics (`/code-structure`)
 - **File coverage**: All files that need changes identified?
 - **Implementation order**: Right order? Hidden dependencies?
 - **Testing strategy**: Unit, integration, e2e coverage for critical paths?
+- **Evidence plan**: What before/after proof will show it works (`/evidence-driven-testing`): screenshots or recording for UI, measured numbers or output pairs otherwise
 - **Migration strategy**: DB migrations? Feature flags? Backwards compatibility?
 - **Risk areas**: Complex integrations, performance, third-party limits?
 - **Verification plan**: How to prove it works?
@@ -69,7 +75,8 @@ Produce a consolidated **Validated Feature Plan** with:
 2. Warnings and accepted risks
 3. Refined tasks in implementation order
 4. Full implementation plan with file changes
-5. Recommended agent assignments
-6. Open questions needing human decision
+5. Evidence plan per task
+6. Recommended agent assignments
+7. Open questions needing human decision
 
-Refer to the Feature Planner agent for detailed output formats.
+Refer to the Feature Planner agent for detailed output formats. End with: "Next: `/new-feature` if not yet isolated, then `/implement`."
