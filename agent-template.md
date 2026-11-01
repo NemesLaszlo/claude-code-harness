@@ -2,7 +2,7 @@
 name: [agent-name]
 description: [One-line description of when to use this agent. Claude reads this to decide when to delegate, so write it trigger-first: "Use this agent when..."]
 version: 1.0
-model: fable
+model: opus                                # opus for agents that build and edit files; fable for planning, research, review and design
 color: blue
 # --- Optional fields (delete the ones you don't need) ---
 # tools: Read, Grep, Glob, Bash            # allowlist; omit to inherit every tool

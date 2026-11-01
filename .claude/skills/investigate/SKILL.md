@@ -45,4 +45,4 @@ Produce a structured **DeepDive Handoff** with:
 - **Open Questions**: Anything uncertain
 - **How to Verify**: How to test that a fix works
 
-Do NOT write code or implement fixes. Produce analysis that an implementation agent (DeepCode, Clean Code Architect) can act on. End with: "Next: `/new-feature` to isolate, then hand this to DeepCode, or `/plan-feature` if the fix spans several tasks."
+Do NOT write code or implement fixes. Produce analysis that Clean Code Architect can act on. End with: "Next: `/new-feature` to isolate, then hand this handoff to Clean Code Architect, or `/plan-feature` if the fix spans several tasks."

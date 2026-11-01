@@ -4,7 +4,9 @@ description: "Code review using Clean Code Architect principles. Reviews staged 
 argument-hint: "[file, directory, or blank for current changes]"
 context: fork
 agent: clean-code-architect
+model: fable
 background: false
+disallowed-tools: Edit, Write, NotebookEdit
 allowed-tools: Bash(git branch *), Bash(git diff *), Bash(git log *)
 ---
 

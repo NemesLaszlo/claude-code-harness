@@ -44,7 +44,9 @@ For each issue:
 - Backend file issues → use **Backend Architect** agent
 - Frontend file issues → use **Frontend Developer** agent
 - Cross-cutting or refactoring → use **Clean Code Architect** agent
-- Security-specific fixes → use **Security Vulnerability Scanner** agent for guidance, then implement
+- Security-specific fixes → ask the **Security Vulnerability Scanner** agent for the fix (it cannot edit files), then hand that fix to the Backend Architect or Frontend Developer that owns the file
+
+Launch each agent through the Agent tool with its `subagent_type` (`backend-architect`, `frontend-developer`, `clean-code-architect`; `security-vulnerability-scanner` for guidance only) and give it the issue list for its files. Group issues by file so one agent handles one file. Do not apply fixes from the main context.
 
 **Fix Rules:**
 - Fix the actual issue — don't just suppress warnings

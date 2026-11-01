@@ -1,8 +1,7 @@
 ---
 name: backend-architect
 description: Use this agent for system design, API architecture, database design, and scaling decisions. This includes REST/GraphQL/gRPC API design, schema modeling, caching strategies, microservices architecture, and performance optimization.
-version: 1.1
-model: fable
+model: opus
 color: green
 skills: code-structure
 ---

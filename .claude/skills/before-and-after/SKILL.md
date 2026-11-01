@@ -21,19 +21,16 @@ allowed-tools:
 > **Package:** `@vercel/before-and-after`
 > Never use `before-and-after` (wrong package).
 
-## Agent Behavior Rules
+## Agent behavior rules
 
-**DO NOT:**
-- Switch git branches, stash changes, start dev servers, or assume what "before" is
-- Use `--full` unless user explicitly asks for full page / full scroll capture
-
-**DO:**
+- Do not switch git branches, stash changes, start dev servers, or guess what "before" is; the user's checkout stays as it is
+- Use `--full` only when the user asks for a full-page capture
 - Use `--markdown` when user wants PR integration or markdown output
 - Use `--mobile` / `--tablet` if user mentions phone, mobile, tablet, responsive, etc.
 - Assume current state is **After**
-- If user provides only one URL or says "PR screenshots" without URLs, **ASK**: "What URL should I use for the 'before' state? (production URL, preview deployment, or another local port)"
+- If user provides only one URL or says "PR screenshots" without URLs, ask: "What URL should I use for the 'before' state? (production URL, preview deployment, or another local port)"
 
-## Execution Order (MUST follow)
+## Execution order
 
 1. **Pre-flight** — `which before-and-after || npm install -g @vercel/before-and-after`
 2. **Protection check** — if `.vercel.app` URL: `curl -s -o /dev/null -w "%{http_code}" "<url>"` (401/403 = protected)
@@ -41,7 +38,7 @@ allowed-tools:
 4. **Upload** — `./scripts/upload-and-copy.sh <before.png> <after.png> --markdown`
 5. **PR integration** — optionally `gh pr edit` to append markdown
 
-**Never skip steps 1-2.**
+Steps 1 and 2 run every time: step 1 makes sure the CLI exists, step 2 catches protected deployments before a blank capture.
 
 ## Quick Reference
 

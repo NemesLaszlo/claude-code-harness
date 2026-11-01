@@ -4,7 +4,8 @@ description: >
   Iteratively improves a PR (GitHub), MR (GitLab), or shelved changelist (Perforce) until Greptile
   gives it a 5/5 confidence score with zero unresolved comments. Triggers Greptile review, fixes all
   actionable comments, pushes/re-shelves, re-triggers review, and repeats. Use when the user wants to
-  fully optimize a PR/MR/CL against Greptile's code review standards.
+  fully optimize a PR/MR/CL against Greptile's code review standards. Pass --apps for PRs over
+  Greptile's file-count limit; it tags @greptile-apps instead of @greptile.
 license: MIT
 compatibility: Requires git, gh (GitHub CLI) or glab (GitLab CLI) authenticated, and Greptile installed on the repo. For Perforce, requires p4 CLI authenticated.
 metadata:
@@ -12,7 +13,7 @@ metadata:
   version: "1.3"
 allowed-tools: Bash(gh:*) Bash(glab:*) Bash(git:*) Bash(p4:*)
 disable-model-invocation: true
-argument-hint: "[pr-number] [--max-iterations N] [--vcs github|gitlab|perforce]"
+argument-hint: "[pr-number] [--max-iterations N] [--apps] [--vcs github|gitlab|perforce]"
 ---
 
 # Greploop
@@ -23,6 +24,7 @@ Iteratively fix a PR/MR/CL until Greptile gives a perfect review: 5/5 confidence
 
 - **PR/MR/CL number** (optional): If not provided, detect the PR/MR for the current branch, or the default pending changelist for p4.
 - **`--max-iterations N`** (optional, default **10**): cap on review-fix-push cycles before the loop stops and reports the current state. Raise it for large PRs where Greptile keeps surfacing new findings; lower it to bound cost.
+- **`--apps`** (optional): tag `@greptile-apps` instead of `@greptile`. Use it for PRs over Greptile's file-count limit, which the plain mention refuses ("Too many files changed for review"). Auto-review skips those PRs, so every push needs a fresh trigger comment. `<MENTION>` below means `@greptile`, or `@greptile-apps` with `--apps`.
 
 ## Instructions
 
@@ -111,7 +113,7 @@ If Greptile is **not** already running (`PENDING` or `IN_PROGRESS`), request a f
 
 ```bash
 if [ "$GREPTILE_STATE" != "PENDING" ] && [ "$GREPTILE_STATE" != "IN_PROGRESS" ]; then
-  gh pr comment <PR_NUMBER> --body "@greptile review"
+  gh pr comment <PR_NUMBER> --body "<MENTION> review"
 fi
 ```
 
@@ -158,6 +160,13 @@ done
 
 If polling times out, stop the greploop workflow and report the timeout. Do not continue with stale or missing review results.
 
+**Huge-PR fallback (`--apps`):** on PRs over Greptile's file limit, the tagged review may never create a check run for the new head; Greptile edits its existing summary comment when it finishes instead. If the check run has not appeared after a few attempts, poll the latest Greptile-authored issue comment and stop when its `updated_at` moves past the time you posted the trigger and its body carries a confidence score rather than the "Too many files changed" notice:
+
+```bash
+gh api --paginate "repos/{owner}/{repo}/issues/<PR_NUMBER>/comments?per_page=100" \
+  --jq '[.[] | select(.user.login | test("greptile"; "i"))] | sort_by(.updated_at) | last | {updated_at, body}'
+```
+
 **GitLab** — check if Greptile is already running before posting a trigger comment:
 
 ```bash
@@ -169,7 +178,7 @@ If no pipeline is running, post a trigger comment:
 
 ```bash
 if [ "$GREPTILE_RUNNING" = "0" ]; then
-  glab mr note <MR_IID> --message "@greptile review"
+  glab mr note <MR_IID> --message "<MENTION> review"
 fi
 ```
 

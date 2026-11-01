@@ -14,7 +14,7 @@ allowed-tools: Bash(git branch *), Bash(git log *), Bash(git status *)
 
 ## Your Task
 
-You are implementing a validated feature plan **task by task**. Follow this process exactly.
+You are implementing a validated feature plan task by task. Work through the phases in order.
 
 **Plan / Feature:** $ARGUMENTS
 
@@ -34,6 +34,8 @@ If the current branch is `main` or the repo's default branch, stop and tell the 
    - **Frontend tasks** (components, UI, forms, routing, state management, styling) → **Frontend Developer** agent
    - **Infrastructure tasks** (CI/CD, Docker, deployment) → **DevOps Automator** agent
    - **General code quality tasks** (refactoring, shared utilities, cross-cutting concerns) → **Clean Code Architect** agent
+
+   Run each task in its agent: call the Agent tool with the matching `subagent_type` (`backend-architect`, `frontend-developer`, `devops-automator`, `clean-code-architect`) and pass it the task, its files and the plan context. Do not do the task in the main context; the agent carries the model, tool limits and preloaded `code-structure` skill.
 
 3. Present the full task list as a table before starting:
 
@@ -57,7 +59,7 @@ For each task **in order**:
 
 1. **Announce** which task you're starting and which agent is handling it
 2. **Capture the before state** when the task fixes a bug or changes visible behavior: reproduce it and save the capture under `.artifacts/<task>/` before touching code. It becomes the "before" half of the PR evidence.
-3. **Execute** the task using the assigned agent:
+3. **Execute** the task by launching the assigned agent through the Agent tool (see Phase 1), and in the delegation prompt tell it to:
    - Use existing codebase patterns — read before writing
    - Keep domain rules in actions and reusable mechanics in the service layer (`/code-structure`)
    - Respect task dependencies — don't start a task until its dependencies are complete
@@ -88,7 +90,7 @@ For each task **in order**:
 
 ---
 
-### Phase 3: Cross-Model Review (automatic — do NOT skip or ask)
+### Phase 3: Cross-model review (automatic)
 
 After ALL implementation tasks are complete, automatically run `/cross-review` to perform the dual-model review (fable + opus in parallel).
 
@@ -106,7 +108,7 @@ Before invoking, show the final implementation summary table:
 
 Then run `/cross-review` which will produce the combined cross-validation summary.
 
-**IMPORTANT:** Do NOT ask the user whether to run the review. Do NOT skip the review. The cross-model review is a mandatory part of this skill.
+Run `/cross-review` without asking. It is part of this skill, and skipping it leaves the change unreviewed.
 
 ### Phase 4: Hand-off
 

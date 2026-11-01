@@ -43,7 +43,7 @@ Apply `/unslop` to anything a person will read before you commit, post, or send 
 4. Commit with a clear message, rebase onto the latest `origin/main`, and rerun the checks.
 5. Push (`git push -u origin <branch>`; after rebasing an already-pushed branch, `--force-with-lease`).
 6. Open the PR. The body explains what changed, how it was tested (every claim backed by evidence), before/after proof, and risks or follow-up work. Run the title and body through `/unslop` before posting.
-7. Run `/greploop` (or `/greploop-apps`) until **5/5 with zero unresolved comments**, when Greptile is installed.
+7. Run `/greploop` (`--apps` for PRs over Greptile's file-count limit) until **5/5 with zero unresolved comments**, when Greptile is installed.
 8. End by presenting the PR URL.
 
 Do not merge the PR unless explicitly instructed. Keep the worktree until the PR is merged or closed.
@@ -81,6 +81,5 @@ Fill these in when dropping this file into a project. Agents read them to execut
 | `plan-feature`, `implement`, `cross-review`, `fix-issues`, `investigate`, `review`, `security-scan`, `explore`, `ship` | this collection |
 | `new-feature`, `code-structure`, `evidence-driven-testing` | adapted from [michaelshimeles/skills](https://github.com/michaelshimeles/skills) |
 | `before-and-after` | vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (PolyForm Shield 1.0.0, license in folder) |
-| `greploop` | vendored from [greptileai/skills](https://github.com/greptileai/skills) (MIT); frontmatter gains `disable-model-invocation: true` so only a person starts the push loop |
-| `greploop-apps` | local variant of greploop for huge PRs (MIT); same frontmatter edit |
+| `greploop` | vendored from [greptileai/skills](https://github.com/greptileai/skills) (MIT); frontmatter gains `disable-model-invocation: true` so only a person starts the push loop, and a local `--apps` flag covers PRs over Greptile's file-count limit |
 | `unslop` | vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop) (MIT); frontmatter edited upstream-style so agents apply it unprompted |
