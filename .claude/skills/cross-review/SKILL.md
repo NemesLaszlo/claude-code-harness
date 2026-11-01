@@ -87,4 +87,4 @@ After both agents complete:
 Run `/fix-issues` to address all must-fix and should-fix items.
 ```
 
-**IMPORTANT:** Do NOT ask the user whether to run either review. Both models run automatically. This is the entire purpose of this skill.
+Run both reviews without asking. Two independent reviews are the point of this skill.

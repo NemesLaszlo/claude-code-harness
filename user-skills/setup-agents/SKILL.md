@@ -33,10 +33,10 @@ Based on the project type, recommend which agents to include. Use these guidelin
 | **Frontend SPA** | Feature Planner, Frontend Developer, UI Designer, Clean Code Architect |
 | **Mobile App** | Feature Planner, Mobile App Builder, UI Designer, Backend Architect |
 | **Startup/MVP** | Feature Planner, Rapid Prototyper, Backend Architect, UI Designer |
-| **Enterprise** | Feature Planner, DeepDive, DeepCode, Backend Architect, Security Scanner, DevOps Automator |
+| **Enterprise** | Feature Planner, DeepDive, Clean Code Architect, Backend Architect, Security Scanner, DevOps Automator |
 | **AI/ML Project** | Feature Planner, AI Engineer, Backend Architect, Clean Code Architect |
 
-**Feature Planner** is included in every set. Consider adding **DeepDive + DeepCode** to any project where bug investigation is needed.
+**Feature Planner** is included in every set. Consider adding **DeepDive** to any project where bug investigation is needed; Clean Code Architect implements its handoffs.
 
 Present the recommendation and ask the user to confirm or adjust before copying.
 
@@ -47,7 +47,7 @@ After confirmation:
 1. Create `.claude/agents/` and copy the selected agent files from the collection
 2. Copy the workflow skills to `.claude/skills/`. Always copy: `new-feature`, `plan-feature`, `implement`, `cross-review`, `fix-issues`, `investigate`, `review`, `security-scan`, `explore`, `code-structure`, `ship`, `unslop`
 3. Copy `evidence-driven-testing` (with `scripts/`) and `before-and-after` (with `scripts/` and `LICENSE`) unless the project has no UI and no runtime to probe
-4. Copy `greploop` and `greploop-apps` (with `LICENSE` and `references/`) only when Greptile is installed
+4. Copy `greploop` (with `LICENSE` and `references/`) only when Greptile is installed
 5. Copy `.claude/settings.json` if the project has none; otherwise merge the `permissions.allow` and `permissions.deny` entries
 6. Copy `AGENTS.md` to the project root if none exists; if one exists, append the missing sections instead of overwriting
 7. Append the gitignore entries: `.claude/worktrees/`, `.artifacts/`, `.claude/settings.local.json`

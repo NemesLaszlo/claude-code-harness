@@ -1,6 +1,6 @@
 # Claude Code Harness
 
-A curated harness for Claude Code: **13 specialized agents**, **16 skills**, and a six-beat **AGENTS.md workflow** that takes a task from an isolated worktree to an evidence-backed pull request. Copy the `.claude/` folder and `AGENTS.md` into any project and start working immediately.
+A curated harness for Claude Code: **12 specialized agents**, **15 skills**, and a six-beat **AGENTS.md workflow** that takes a task from an isolated worktree to an evidence-backed pull request. Copy the `.claude/` folder and `AGENTS.md` into any project and start working immediately.
 
 ## Quick Start
 
@@ -24,7 +24,7 @@ your-project/
 └── .claude/
     ├── settings.json                 # Pre-approved read-only git/gh commands, force-push denied
     ├── agents/
-    │   ├── engineering/              # feature-planner, clean-code-architect, deepdive, deepcode, security-vulnerability-scanner
+    │   ├── engineering/              # feature-planner, clean-code-architect, deepdive, security-vulnerability-scanner
     │   ├── engineering-additional/   # backend-architect, frontend-developer, mobile-app-builder, ai-engineer, devops-automator, rapid-prototyper
     │   └── design/                   # ui-designer, ux-researcher
     └── skills/
@@ -33,7 +33,7 @@ your-project/
         ├── implement/ code-structure/                   # Build
         ├── cross-review/ fix-issues/ review/            # Review
         ├── evidence-driven-testing/ before-and-after/   # Prove
-        ├── ship/ greploop/ greploop-apps/ security-scan/ # Ship
+        ├── ship/ greploop/ security-scan/ # Ship
         └── unslop/                   # Always: text written for people
 ```
 
@@ -65,16 +65,15 @@ Small change? `/new-feature`, build directly, `/review`, `/ship`. Unknown territ
 
 ## Agents
 
-All agents use **Claude Fable** as the primary model. Research-only agents cannot edit files (`disallowedTools`), implementation agents preload the `code-structure` skill, and every agent has a `color` for the subagent view.
+Agents that plan, investigate, review or design run on **Claude Fable**. Agents that build and edit files run on **Claude Opus**: Fable costs about 2.5x more per token and earns it on judgment-heavy work, while implementation runs many cheap tool-call turns. `/review` pins Fable on the forked Clean Code Architect, and `/cross-review` runs Fable and Opus side by side. Research-only agents cannot edit files (`disallowedTools`). Clean Code Architect, Backend Architect and Frontend Developer preload the `code-structure` skill. Every agent has a `color` for the subagent view.
 
 ### Engineering Core
 
 | Agent | Purpose | Best For |
 |-------|---------|----------|
 | **Feature Planner** | Three-phase validation before implementation (read-only) | Feature planning, spec validation, edge case analysis, evidence plan |
-| **Clean Code Architect** | Quality code with DRY, SOLID and the actions/service split | Feature implementation, refactoring, reusable modules, .NET 10 |
+| **Clean Code Architect** | Quality code with DRY, SOLID and the actions/service split | Feature implementation, refactoring, DeepDive handoffs, reusable modules, .NET 10 |
 | **DeepDive** | Deep investigation and root cause analysis (read-only) | Bug investigation, performance issues, architectural problems |
-| **DeepCode** | Implementation partner for DeepDive | Executing fixes with before/after evidence |
 | **Security Vulnerability Scanner** | Security audits (read-only) | OWASP Top 10, agent and tool surfaces, pre-deploy reviews |
 
 ### Engineering Specialists
@@ -105,7 +104,7 @@ All agents use **Claude Fable** as the primary model. Research-only agents canno
 | **cross-review** | `/cross-review [target]` | main, spawns fable + opus | Dual-model review merged and deduplicated into a combined summary |
 | **fix-issues** | `/fix-issues [issues]` | main | Fixes all must-fix and should-fix items from any review |
 | **investigate** | `/investigate [problem]` | forked DeepDive | Root cause analysis with a reproduction and handoff |
-| **review** | `/review [target]` | forked Clean Code Architect | Single-model code review against Clean Code principles |
+| **review** | `/review [target]` | forked Clean Code Architect on fable | Single-model code review against Clean Code principles |
 | **security-scan** | `/security-scan [target]` | forked Scanner | OWASP Top 10 plus agent/tool surfaces |
 | **explore** | `/explore [question]` | forked Explore | Trace flows, map architecture, understand code |
 | **code-structure** | `/code-structure` | main | Actions vs service-layer guidance with a migration checklist |
@@ -113,7 +112,6 @@ All agents use **Claude Fable** as the primary model. Research-only agents canno
 | **before-and-after** | `/before-and-after [before] [after]` | main | Screenshot pair and PR-ready markdown table |
 | **ship** | `/ship [title]` | main, user-only | Checks, evidence, commit, rebase, push, PR body, Greptile hand-off |
 | **greploop** | `/greploop [pr]` | main, user-only | Loop until Greptile reports 5/5 with zero unresolved comments |
-| **greploop-apps** | `/greploop-apps [pr]` | main, user-only | Same loop for PRs over Greptile's file-count limit |
 | **unslop** | `/unslop` | applied unprompted | Removes AI tells from commit messages, PR text, docs, comments |
 
 "Forked" skills run with `context: fork` on the named agent, so the diff or investigation never lands in your main context. "User-only" skills carry `disable-model-invocation: true` because they change the repo or push commits.
@@ -145,10 +143,10 @@ Run `python .claude/skills/evidence-driven-testing/scripts/evidence.py doctor` t
 | **Frontend SPA** | Feature Planner, Frontend Developer, UI Designer, Clean Code Architect |
 | **Mobile App** | Feature Planner, Mobile App Builder, UI Designer, Backend Architect |
 | **Startup / MVP** | Feature Planner, Rapid Prototyper, Backend Architect, UI Designer |
-| **Enterprise** | Feature Planner, DeepDive, DeepCode, Backend Architect, Security Scanner, DevOps Automator |
+| **Enterprise** | Feature Planner, DeepDive, Clean Code Architect, Backend Architect, Security Scanner, DevOps Automator |
 | **AI / ML** | Feature Planner, AI Engineer, Backend Architect, Clean Code Architect |
 
-**Feature Planner** is included in every set. Consider adding **DeepDive + DeepCode** to any project where you'll need bug investigation.
+**Feature Planner** is included in every set. Consider adding **DeepDive** to any project where you'll need bug investigation; Clean Code Architect implements its handoffs.
 
 ## Creating Custom Agents
 
@@ -164,7 +162,7 @@ cp agent-template.md .claude/agents/your-domain/your-agent.md
 |---|---|---|
 | `new-feature`, `code-structure`, `evidence-driven-testing` | adapted from [michaelshimeles/skills](https://github.com/michaelshimeles/skills) | see upstream |
 | `before-and-after` | [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) | PolyForm Shield 1.0.0 (in folder) |
-| `greploop`, `greploop-apps` | [greptileai/skills](https://github.com/greptileai/skills); frontmatter gains `disable-model-invocation: true` and an `argument-hint` | MIT (in folder) |
+| `greploop` | [greptileai/skills](https://github.com/greptileai/skills); frontmatter gains `disable-model-invocation: true`, an `argument-hint` and a local `--apps` flag for PRs over Greptile's file-count limit | MIT (in folder) |
 | `unslop` | [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop) | MIT (in folder) |
 
 The `evidence-driven-testing` tests were moved inside the skill folder; the only change is the path to `scripts/evidence.py`.

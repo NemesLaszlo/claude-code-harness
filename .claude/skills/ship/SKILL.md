@@ -66,7 +66,7 @@ Run the title and body through the `/unslop` checklist before posting. Append th
 
 ### 6. Automated review loop
 
-- If Greptile is installed on the repo (a `greptile` check run exists or the bot has commented on a previous PR), tell the user to run `/greploop` (or `/greploop-apps` for very large PRs). Both are user-invoked because they push commits in a loop.
+- If Greptile is installed on the repo (a `greptile` check run exists or the bot has commented on a previous PR), tell the user to run `/greploop` (`/greploop --apps` for PRs over Greptile's file-count limit). It is user-invoked because it pushes commits in a loop.
 - Otherwise rely on the `/cross-review` and `/fix-issues` pass that `/implement` already ran, and say so in the hand-off.
 
 ### 7. Hand off
